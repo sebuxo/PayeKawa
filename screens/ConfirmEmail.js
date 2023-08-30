@@ -14,14 +14,14 @@ const NumberInputScreen = () => {
 
   const Verify = async () => {
     try {
-      const response = await axios.post('https://your-api-endpoint.com/Verify', {
+      const response = await axios.post('https://localhost:3001/Verify', {
         code: number,
       });
 
       if (response.status === 200) {
         setResponseMessage('Email Verified !');
       } else {
-        setResponseMessage('Failed to send number. Please try again.');
+        setResponseMessage('Failed to verify. Please try again.');
       }
     } catch (error) {
       setResponseMessage('An error occurred. Please try again later.');
