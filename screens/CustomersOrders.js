@@ -6,9 +6,9 @@ const ProductScreen = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/products')
+    axios.get('http://localhost:3001/customers/0/orders/0')
       .then(response => setData(response.data))
-      .catch(error => console.error('zbzb', error));
+      .catch(error => console.error('hehew', error));
         
   }, []);
   console.log(data)
