@@ -6,9 +6,9 @@ const ProductScreen = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/products')
+    axios.get('http://192.168.0.13:3001/products')
       .then(response => setData(response.data))
-      .catch(error => console.error('zbzb', error));
+      .catch(error => console.error('Not found', error));
         
   }, []);
   console.log(data)
