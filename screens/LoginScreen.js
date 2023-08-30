@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:3000/login', {
-        username,
+        email,
         password,
       });
       console.log(response);
@@ -19,23 +24,27 @@ const Login = () => {
       console.error('Login error:', error);
     }
   };
+  const redirectRegister = () =>{
+    navigation.navigate('Register');
+  }
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={text => setUsername(text)}
+        placeholder="Email"
+        value={email}
+        onChangeText={text => setEmail(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        secureTextEntry
+        secureTextEntry a
         value={password}
         onChangeText={text => setPassword(text)}
       />
       <Button title="Login" onPress={handleLogin} />
+      <Button title="Register" onPress={redirectRegister} />
     </View>
   );
 };
