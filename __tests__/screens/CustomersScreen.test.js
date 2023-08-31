@@ -22,8 +22,8 @@ describe('CustomersScreen', () => {
     const { getByText, getByTestId } = render(<CustomersScreen />);
 
     await waitFor(() => {
-      const customer1Name = getByText('Jill Weeks');
-      expect(customer1Name).toBeTruthy();
+      const customerName = getByText('Jill Weeks');
+      expect(customerName).toBeTruthy();
     });
   });
 });

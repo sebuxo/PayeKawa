@@ -6,7 +6,7 @@ const CustomersOrders = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/customers/0/orders')
+    axios.get('http://192.168.0.13:3001/customers/0/orders')
       .then(response => setData(response.data))
       .catch(error => console.error('orders not found', error));
         

@@ -34,8 +34,8 @@ describe('ProductScreen', () => {
 
 
     await waitFor(() => {
-      const product1Name = getByText('Carmela Alvarado');
-      expect(product1Name).toBeTruthy();
+      const productName = getByText('Carmela Alvarado');
+      expect(productName).toBeTruthy();
     });
   });
 });
