@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { View, Text, StyleSheet } from 'react-native';
 
-const ProductScreen = () => {
+const CustomersOrders = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:3001/customers/0/orders')
       .then(response => setData(response.data))
-      .catch(error => console.error('hehew', error));
+      .catch(error => console.error('orders not found', error));
         
   }, []);
-  console.log(data)
+  //console.log(data)
 
  return (
     <View style={styles.container}>
@@ -19,11 +19,7 @@ const ProductScreen = () => {
         data.map(item => (
           <View key={item._id} style={styles.itemContainer}>
             <Text style={styles.createdAt}>{item.createdAt}</Text>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.price}>{item.details.price}</Text>
-            <Text style={styles.description}>{item.details.description}</Text>
-            <Text style={styles.color}>{item.details.color}</Text>
-            <Text style={styles.stock}>{item.stock}</Text>
+            <Text style={styles.customer}>{item.customerId}</Text>
           </View>
         ))
       ) : (
@@ -42,23 +38,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  name: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  price: {
+ 
+  customer: {
     fontSize: 18,
-  },
-  description: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  color: {
-    fontSize: 16,
-  },
-  stock: {
-    fontSize: 16,
-  },
+  }
 });
 
-export default ProductScreen;
+export default CustomersOrders;
