@@ -11,7 +11,7 @@ const ProductScreen = () => {
       .catch(error => console.error('Not found', error));
         
   }, []);
-  console.log(data)
+  // console.log(data)
 
  return (
     <View style={styles.container}>
