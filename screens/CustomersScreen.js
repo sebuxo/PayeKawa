@@ -11,18 +11,6 @@ const CustomersScreen = () => {
       .catch(error => console.error('No customers found', error));
         
   }, []);
-  // console.log(data)
-  const renderOrdersCount = async (customerId) => {
-    try {
-      const response = await axios.get(`http://192.168.0.13:3001/customers/${customerId}/orders`);
-      const customerOrders = response.data;
-      const ordersCount = customerOrders.length;
-      return <Text>{`${ordersCount} Orders`}</Text>;
-    } catch (error) {
-      console.error('Error fetching customer orders', error);
-      return <Text>Error fetching orders</Text>;
-    }
-  };
   return (
     <View style={styles.container}>
       {data.length > 0 ? (
