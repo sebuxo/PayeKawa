@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import axios from 'axios';
+import React, { useState } from 'react'
+import axios from 'axios'
+import {StyleSheet, View } from 'react-native'
+
+import Background from '../components/Background'
+
+import Header from '../components/Header'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import { theme } from '../core/theme'
+import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/native'
+
 
 const NumberInputScreen = () => {
-  const [verificationCode, setverificationCode] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const [verification, setverificationCode] = useState('');
+  const navigator = useNavigation();
+  
 
   const handleNumberChange = (text) => {
     // Allow only digits and limit to 8 characters
@@ -12,63 +23,65 @@ const NumberInputScreen = () => {
     setverificationCode(formattedText);
   };
 
-  const Verify = async () => {
+  const verify = async () => {
+    console.log("zbe",verification);
     try {
-      const response = await axios.post('https://localhost:3001/Verify', {
-        code: number,
+      const response = await axios.post('http://192.168.1.9:3000/verify', {
+        verification
       });
+      console.log(response.data)
 
       if (response.status === 200) {
-        setResponseMessage('Email Verified !');
+       await SecureStore.setItemAsync("password",String(response.data));
+      
+        navigator.navigate('Login')
+        
       } else {
-        setResponseMessage('Failed to verify. Please try again.');
+        console.log("nothing found")
       }
     } catch (error) {
-      setResponseMessage('An error occurred. Please try again later.');
+
+      console.log(error);
     }
   };
 
   return (
+    <Background>
     <View style={styles.container}>
-      <Text style={styles.title}>Enter the verification code : </Text>
+      <Header>Enter the verification code : </Header>
       <TextInput
         placeholder="Enter Code"
-        value={number}
-        onChangeText={handleNumberChange}
+        value={verification}
+        onChangeText={code => setverificationCode(code)}
         keyboardType="numeric"
         maxLength={8}
         style={styles.input}
       />
-      <Button title="Verify" onPress={Verify} />
-      <Text style={styles.responseMessage}>{responseMessage}</Text>
+      <Button mode="contained" onPress={verify}>
+        Verify
+      </Button>
     </View>
+    </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  input: {
+  forgotPassword: {
     width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    alignItems: 'flex-end',
+    marginBottom: 24,
   },
-  responseMessage: {
-    marginTop: 20,
-    color: 'green',
-    fontStyle: 'italic',
+  row: {
+    flexDirection: 'row',
+    marginTop: 4,
   },
-});
-
+  forgot: {
+    fontSize: 13,
+    color: theme.colors.secondary,
+  },
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+  },
+})
 export default NumberInputScreen;

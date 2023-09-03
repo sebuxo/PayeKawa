@@ -1,26 +1,37 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/LoginScreen'; // Create this component
 import ProductScreen from './screens/ProductScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ConfirmationScreen from './screens/ConfirmationScreen';
+import LoginScreenTest from './screens/LoginScreen'
+import ConfirmEmail from './screens/ConfirmEmail'
 
-import CustomersScreen from './screens/CustomersScreen';
-import CustomersOrders from './screens/CustomersOrders';
+import ProductDetail from './screens/ProductDetail';
+import StartScreen from './screens/StartScreen';
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="CustomersOrders">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
-        <Stack.Screen name="CustomersOrders" component={CustomersOrders}/>
-        <Stack.Screen name="Product" component={ProductScreen} />
-        <Stack.Screen name="Customers" component={CustomersScreen} />
+      <Stack.Navigator initialRouteName="Start">
+        <Stack.Screen name="Start" component={StartScreen} options={{
+          headerLeft: () => null, 
+        }} />
+        <Stack.Screen name="Login" component={LoginScreenTest} options={{
+          headerLeft: () => null, 
+        }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{
+          headerLeft: () => null, 
+        }} />
+        <Stack.Screen name="Product" component={ProductScreen} options={{
+          headerLeft: () => null, 
+        }} />
+        <Stack.Screen name="Confirm" component={ConfirmEmail} options={{
+          headerLeft: () => null, 
+        }} />
+        <Stack.Screen name="ProductDetail" component={ProductDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,63 +1,85 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text,FlatList,TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
 
 const ProductScreen = () => {
   const [data, setData] = useState([]);
-
+  const navigation = useNavigation();
   useEffect(() => {
-    axios.get('http://192.168.0.13:3001/products')
+    SecureStore.getItemAsync("token").then((apiKey)=>axios.get('http://192.168.1.9:3001/products',{
+      headers: {
+        'x-api-key': apiKey
+      },
+    })
       .then(response => setData(response.data))
-      .catch(error => console.error('Not found', error));
+      .catch(error => console.error('Not found', error))
+      )
+    
         
   }, []);
-  // console.log(data)
 
- return (
+
+  const handleProductPress = (productId) => {
+    const product = data.find(product => product.id ==productId);
+    console.log(product)
+    navigation.navigate('ProductDetail', { product });
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleProductPress(item.id)}>
+    <View style={styles.productItem}>
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productPrice}>{item.details.price}</Text>
+      <Text style={styles.productDescription}>{item.details.description}</Text>
+    </View>
+    </TouchableOpacity>
+  );
+
+  return (
     <View style={styles.container}>
-      {data.length > 0 ? (
-        data.map(item => (
-          <View key={item._id} style={styles.itemContainer}>
-            <Text style={styles.createdAt}>{item.createdAt}</Text>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.price}>{item.details.price}</Text>
-            <Text style={styles.description}>{item.details.description}</Text>
-            <Text style={styles.color}>{item.details.color}</Text>
-            <Text style={styles.stock}>{item.stock}</Text>
-          </View>
-        ))
-      ) : (
-        <Text>Loading data...</Text>
-      )}
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()} // Assuming 'id' is a unique identifier
+        contentContainerStyle={styles.list}
+      />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  createdAt: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  list: {
+    padding: 16, // Add padding to separate items
   },
-  name: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  productItem: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 16, // Margin between items
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  price: {
+  productName: {
+    fontSize: 24,
+    color: '#000000',
+    marginBottom: 8,
+  },
+  productPrice: {
     fontSize: 18,
+    color: '#560CCE',
+    marginBottom: 8,
   },
-  description: {
+  productDescription: {
     fontSize: 16,
-    marginBottom: 10,
-  },
-  color: {
-    fontSize: 16,
-  },
-  stock: {
-    fontSize: 16,
+    color: '#414757',
   },
 });
 

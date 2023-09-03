@@ -1,70 +1,81 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react'
+import axios from 'axios'
+import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import Background from '../components/Background'
+import Logo from '../components/Logo'
+import Header from '../components/Header'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import { theme } from '../core/theme'
+
+import * as SecureStore from 'expo-secure-store';
 
 
+export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState('')
+  
+  const navigator = useNavigation();
+   
+ 
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const onLoginPressed = async () => {
 
-  const navigation = useNavigation();
-
-  const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/login', {
-        email,
-        password,
-      });
-      console.log(response);
+        const password = await SecureStore.getItemAsync("password")
+        const response = await axios.post('http://192.168.1.9:3000/login', {
+          email,
+          password
+        });
 
-    
-    } catch (error) {
-      console.error('Login error:', error);
-    }
-  };
-  const redirectRegister = () =>{
-    navigation.navigate('Register');
+        await SecureStore.setItemAsync("token", response.data);
+
+        console.log(await SecureStore.getItemAsync("token"))
+
+        navigator.navigate('Product');
+      } catch (error) {
+        console.error('Login error:', error);
+      }      
   }
 
   return (
-    <View style={styles.container}>
+    <Background>
+      <Logo />
+      <Header>Welcome</Header>
       <TextInput
-        style={styles.input}
-        placeholder="Email"
+        label="Email"
+        returnKeyType="next"
         value={email}
-        onChangeText={text => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry a
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Register" onPress={redirectRegister} />
-    </View>
-  );
-};
+    
+      <Button mode="contained" onPress={onLoginPressed}>
+        Login
+      </Button>
+    </Background>
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+  forgotPassword: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 24,
   },
-  input: {
-    width: '80%',
-    marginBottom: 15,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#fff',
+  row: {
+    flexDirection: 'row',
+    marginTop: 4,
   },
-});
-
-export default Login;
+  forgot: {
+    fontSize: 13,
+    color: theme.colors.secondary,
+  },
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+  },
+})

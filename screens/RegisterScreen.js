@@ -1,100 +1,88 @@
-import React, { useState ,useEffect} from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import axios from 'axios';
-const RegisterScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstname,setFirstName] = useState('');
-  const [lastname,setLastName] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+import React, { useState } from 'react'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native-paper'
+import Background from '../components/Background'
+import Logo from '../components/Logo'
+import Header from '../components/Header'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import { theme } from '../core/theme'
+import axios from 'axios'
+import { useNavigation } from '@react-navigation/native';
+
+export default function RegisterScreen({ navigation }) {
+  const [firstname, setfirstName] = useState()
+  const [lastname, setlastName] = useState()
+  const [email, setEmail] = useState()
+  const navigator = useNavigation();
+  
 
   const handleRegister = async () => {
-    if (password === confirmPassword) {
-    
-      try {
-        const response = await axios.post('http://localhost:3000/register', {
-          email: email,
-          password: password,
-          firstname : firstname,
-          lastname : lastname
-        });
 
-        if (response.status === 200) {
-         
-          navigation.navigate('Confirmation');
-        } else {
-         
-          alert('Registration failed. Please try again.');
-        }
-      } catch (error) {
+    try {
         
-        console.log(error)
+        const response = await axios.post('http://192.168.1.9:3000/register', {
+          email,
+          firstname,
+          lastname
+        });
+        navigator.navigate('Confirm');
+      } catch (error) {
+        console.error('Login error:', error);
       }
-    } else {
-      alert("Passwords don't match!");
-    }
-  };
+
+      
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
+    <Background>
+      <Logo />
+      <Header>Create Account</Header>
       <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="firstName"
+        label="firstName"
+        returnKeyType="next"
         value={firstname}
-        onChangeText={setFirstName}
-        style={styles.input}
+        onChangeText={(textfname) => setfirstName(textfname)}
+   
       />
       <TextInput
-        placeholder="lastName"
+        label="lastName"
+        returnKeyType="next"
         value={lastname}
-        onChangeText={setLastName}
-        style={styles.input}
+        onChangeText={(textlname) => setlastName(textlname)}
       />
       <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
+        label="Email"
+        returnKeyType="next"
+        value={email}
+        onChangeText={(textmail) => setEmail(textmail)}
+  
       />
-      <TextInput
-        placeholder="Confirm Password"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        style={styles.input}
-      />
-      <Button title="Register" onPress={handleRegister} />
-    </View>
-  );
-};
-
+    
+      <Button
+        mode="contained"
+        onPress={handleRegister}
+        style={{ marginTop: 24 }}
+      >
+        Sign Up
+      </Button>
+      <View style={styles.row}>
+        <Text>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
+          <Text style={styles.link}>Login</Text>
+        </TouchableOpacity>
+      </View>
+    </Background>
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+  row: {
+    flexDirection: 'row',
+    marginTop: 4,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
-
-export default RegisterScreen;
+})
