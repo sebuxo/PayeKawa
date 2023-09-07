@@ -8,7 +8,7 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import { theme } from '../core/theme'
-
+import ip from '../components/Ipaddress'
 import * as SecureStore from 'expo-secure-store';
 
 
@@ -23,7 +23,7 @@ export default function LoginScreen({ navigation }) {
 
     try {
         const password = await SecureStore.getItemAsync("password")
-        const response = await axios.post('http://192.168.1.9:3000/login', {
+        const response = await axios.post(`http://${ip}:3000/login`, {
           email,
           password
         });

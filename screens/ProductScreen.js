@@ -3,12 +3,13 @@ import axios from 'axios';
 import { View, Text,FlatList,TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
+import ip from '../components/Ipaddress'
 
 const ProductScreen = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
   useEffect(() => {
-    SecureStore.getItemAsync("token").then((apiKey)=>axios.get('http://192.168.1.9:3001/products',{
+    SecureStore.getItemAsync("token").then((apiKey)=>axios.get(`http://${ip}:3001/products`,{
       headers: {
         'x-api-key': apiKey
       },

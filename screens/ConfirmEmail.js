@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import {StyleSheet, View } from 'react-native'
-
 import Background from '../components/Background'
-
 import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import { theme } from '../core/theme'
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native'
-
+import ip from '../components/Ipaddress'
 
 const NumberInputScreen = () => {
   const [verification, setverificationCode] = useState('');
@@ -24,9 +22,8 @@ const NumberInputScreen = () => {
   };
 
   const verify = async () => {
-    console.log("zbe",verification);
     try {
-      const response = await axios.post('http://192.168.1.9:3000/verify', {
+      const response = await axios.post(`http://${ip}:3000/verify`, {
         verification
       });
       console.log(response.data)

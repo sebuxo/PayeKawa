@@ -9,6 +9,7 @@ import TextInput from '../components/TextInput'
 import { theme } from '../core/theme'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native';
+import ip from '../components/Ipaddress'
 
 export default function RegisterScreen({ navigation }) {
   const [firstname, setfirstName] = useState()
@@ -21,7 +22,7 @@ export default function RegisterScreen({ navigation }) {
 
     try {
         
-        const response = await axios.post('http://192.168.1.9:3000/register', {
+        const response = await axios.post(`http://${ip}:3000/register`, {
           email,
           firstname,
           lastname
